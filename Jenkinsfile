@@ -1,14 +1,14 @@
 pipeline {
     agent any
     environment {
-        SERVICE = 'order-service'
+        SERVICE = 'order'
         NAME = "isavrodrigues/${env.SERVICE}"
     }
     stages {
         stage('Dependecies') {
             steps {
-                build job: 'account', wait: true
-                build job: 'auth', wait: true
+                build job: 'product', wait: true
+                build job: 'order', wait: true
             }
         }
         stage('Build') { 
@@ -25,7 +25,7 @@ pipeline {
                 {
                     sh "docker login -u $USERNAME -p $TOKEN"
                     sh "docker buildx create --use --platform=linux/arm64,linux/amd64 --node multi-platform-builder-${env.SERVICE} --name multi-platform-builder-${env.SERVICE}"
-                    sh "docker buildx build --platform=linux/arm64,linux/amd64 --push --tag ${env.NAME}:latest --tag ${env.NAME}:${env.BUILD_ID} -f Dockerfile ."
+                    sh "docker buildx build --platform=linux/arm64,linux/amd64 --push --tag ${env.NAME}:latest --tag ${env.NAME}:${env.BUILD_ID} -f DockerFile ."
                     sh "docker buildx rm --force multi-platform-builder-${env.SERVICE}"
                 }
             }
