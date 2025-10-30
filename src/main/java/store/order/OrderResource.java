@@ -18,13 +18,19 @@ public class OrderResource {
     }
 
     @PostMapping
-    public ResponseEntity<Order> create(@RequestBody Order in) {
+    public ResponseEntity<OrderOut> create(@RequestBody OrderIn in) {
         var created = service.create(in, "account-1"); // sem autenticação real
         return ResponseEntity.created(URI.create("/order/" + created.id())).body(created);
     }
 
+    @GetMapping
+    public ResponseEntity<java.util.List<OrderOut>> findAll() {
+        var orders = service.findAll("account-1"); // sem autenticação real
+        return ResponseEntity.ok(orders);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Order> findById(@PathVariable("id") String id) {
+    public ResponseEntity<OrderOut> findById(@PathVariable("id") String id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "orders")
 @Setter @Accessors(chain = true, fluent = true)
@@ -22,11 +24,11 @@ public class OrderModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "id_account")
+    @Column(name = "id_user")
     private String accountId;
 
     @Column(name = "date")
-    private String date;
+    private LocalDateTime date;
 
     @Column(name = "items_json", length = 4000)
     private String itemsJson;
@@ -35,9 +37,8 @@ public class OrderModel {
     private Double total;
 
     public OrderModel(Order o) {
-        this.id = o.id();
         this.accountId = o.accountId();
-        this.date = o.date() != null ? o.date().toString() : null;
+        this.date = o.date();
         this.itemsJson = OrderParser.writeItemsJson(o.items());
         this.total = o.total();
     }
@@ -46,7 +47,7 @@ public class OrderModel {
         return Order.builder()
             .id(this.id)
             .accountId(this.accountId)
-            .date(this.date != null ? java.time.LocalDateTime.parse(this.date) : null)
+            .date(this.date)
             .items(OrderParser.parseItemsJson(this.itemsJson))
             .total(this.total)
             .build();

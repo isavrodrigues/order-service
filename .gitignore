@@ -28,3 +28,6 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+k8s/postgres-config.yaml
+/target
