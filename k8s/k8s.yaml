@@ -18,6 +18,21 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              value: "jdbc:postgresql://store-postgres.cfeuku40mgyh.us-east-2.rds.amazonaws.com:5432/orderdb"
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rds-secrets
+                  key: POSTGRES_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rds-secrets
+                  key: POSTGRES_PASSWORD
+            - name: PRODUCT_SERVICE_URL
+              value: "http://product:80"
           resources:
             requests:
               memory: "200Mi"
